@@ -151,14 +151,15 @@ key:               dataKey,
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  const CircleAvatar(
+
+                   CircleAvatar(
                     radius: 50,
                       backgroundColor: Colors.white,
                       child: Text(
-                        "Z",
+                        usersFiltered[selectedData].Preferred_Name[0].toUpperCase(),
                         style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
                       ),
-                    ), //CircleAvatar
+                    ),
                   const SizedBox(
                     height: 20,
                   ),
@@ -174,10 +175,10 @@ key:               dataKey,
                            daysBetween(usersFiltered[selectedData].doj).toInt().toString()+" years ",
                     style: TextStyle(
                       fontSize: 30,
-                      color: Colors.green[900],
+                      color: Colors.black,
                       fontWeight: FontWeight.w500,
-                    ), //Textstyle
-                  ), //Text
+                    ),
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -191,62 +192,64 @@ key:               dataKey,
                     ),
                      //Textstyle
                   ),
-                  Text(
+                  const SizedBox(height: 10.00),
+
+          Text(
                     "First Name  :  "+ usersFiltered[selectedData].FirstName,
                     style: const TextStyle(
                       fontSize: 15,
-                      color: Colors.green,
-                    ), //Textstyle
-                  ),
+                      color: Colors.black,
+
+                    ),
+                              ),
                   Text(
                     "Middle Name  :  "+ usersFiltered[selectedData].MiddleName.toString(),
                     style: const TextStyle(
                       fontSize: 15,
-                      color: Colors.green,
-                    ), //Textstyle
+                      color: Colors.black,
+                    ),
                   ),
                   Text(
                     "Last Name  :  "+ usersFiltered[selectedData].LastName.toString(),
                     style: const TextStyle(
                       fontSize: 15,
-                      color: Colors.green,
-                    ), //Textstyle
+                      color: Colors.black,
+                    ),
+
                   ),
                   Text(
                     "Preferred Name  :  "+ usersFiltered[selectedData].Preferred_Name.toString(),
                     style: const TextStyle(
                       fontSize: 15,
-                      color: Colors.green,
-                    ), //Textstyle
+                      color: Colors.black,
+                    ),
                   ),
                   Text(
                     "Gender  :  "+ usersFiltered[selectedData].Gender.toString(),
                     style: const TextStyle(
                       fontSize: 15,
-                      color: Colors.green,
-                    ), //Textstyle
+                      color: Colors.black,
+                    ),
                   ),
                   Text(
                     "Email  :  "+ usersFiltered[selectedData].email.toString(),
                     style: const TextStyle(
                       fontSize: 15,
-                      color: Colors.green,
-                    ), //Textstyle
+                      color: Colors.black,
+                    ),
                   ),
                   Text(
                     "Joining Date  :  "+ usersFiltered[selectedData].doj.toString(),
                     style: const TextStyle(
                       fontSize: 15,
-                      color: Colors.green,
-                    ), //Textstyle
+                      color: Colors.black,
+                    ),
                   ),
-                  //SizedBox
-                   //SizedBox
+
                 ],
-              ), //Column
-            ), //Padding
-          ), //SizedBox
-        ) :         const SizedBox(height: 20.00),
+              ),
+            ),
+          ),      ) :         const SizedBox(height: 20.00),
 
         const SizedBox(height: 20.00),
         const Text(
