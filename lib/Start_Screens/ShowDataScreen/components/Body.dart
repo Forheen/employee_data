@@ -58,7 +58,6 @@ class _BodyState extends State<Body> {
   List data;
 
   Future<String> getData() async {
-    print("start");
     try {
       var res = await http.get(
         Uri.parse(API.fetch),
@@ -68,7 +67,6 @@ class _BodyState extends State<Body> {
 
 
       for(int i=0;i<data.length;i++) {
-        print("chchi"+data[i]["first_name"]);
 
         users.add(EmployeeShow(
             ID: data[i]["emp_id"],
@@ -83,23 +81,21 @@ class _BodyState extends State<Body> {
       }
       });
       usersFiltered=users;
-
-      print(data[1]["first_name"]);
-      // var resBody = jsonDecode(res.body)['results'];
-      print("forheen " + jsonDecode(res.body).toString());
-      //   Fluttertoast.showToast(msg: "Succesfully created");
+      //print("Json getData :" + jsonDecode(res.body).toString());
 
 
     }
     catch (e) {
-      print("forheen error : " + e.toString());
+      Fluttertoast.showToast(msg: "Couldn't fetch Data");
+
+      //print("Json getData error : " + e.toString());
     }
   }
-  final dataKey = new GlobalKey();
+  final dataKey =  GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    print("selected index for "+ selectedData.toString());
+    //print("selected index for "+ selectedData.toString());
 
     return Scaffold(
         body : SingleChildScrollView(
@@ -111,13 +107,13 @@ class _BodyState extends State<Body> {
 
       children: <Widget>[
         Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: Card(
 key:               dataKey,
 
               child: ListTile(
 
-                leading: Icon(Icons.search),
+                leading: const Icon(Icons.search),
                 title: TextField(
                     controller: controller,
                     decoration: const InputDecoration(
@@ -130,7 +126,7 @@ key:               dataKey,
                       });
                     }),
                 trailing:  IconButton(
-                  icon: Icon(Icons.cancel),
+                  icon: const Icon(Icons.cancel),
                   onPressed: () {
                     setState(() {
                       controller.clear();
@@ -143,7 +139,7 @@ key:               dataKey,
               ),
             ),
         ),
-        usersFiltered.length > 0 && selectedData!= null ?  Card(
+        usersFiltered.isNotEmpty && selectedData!= null ?  Card(
 
           elevation: 50,
           shadowColor: Colors.black,
@@ -250,9 +246,9 @@ key:               dataKey,
               ), //Column
             ), //Padding
           ), //SizedBox
-        ) :         SizedBox(height: 20.00),
+        ) :         const SizedBox(height: 20.00),
 
-        SizedBox(height: 30.00),
+        const SizedBox(height: 30.00),
 
         DataTable(
           headingTextStyle: const TextStyle(
@@ -304,13 +300,13 @@ key:               dataKey,
 
               setState(() {
                 selectedData=index;
-print("selected index "+ selectedData.toString());
+                //print("selected index "+ selectedData.toString());
                 Fluttertoast.showToast(msg: "ID no. "+usersFiltered[index].ID +" selected! Details are in the card above");
                 Scrollable.ensureVisible(dataKey.currentContext);
               });
             },
 
-color:       MaterialStateColor.resolveWith((states) => daysBetween(usersFiltered[index].doj) > 5.0 ? Colors.green : Colors.white) ,
+        color:MaterialStateColor.resolveWith((states) => daysBetween(usersFiltered[index].doj) > 5.0 ? Colors.green : Colors.white) ,
                 cells: <DataCell>[
                   DataCell(Text(usersFiltered[index].ID)),
 
@@ -377,7 +373,7 @@ color:       MaterialStateColor.resolveWith((states) => daysBetween(usersFiltere
       ],
     ),),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.arrow_upward),
+        child: const Icon(Icons.arrow_upward),
         onPressed: () => Scrollable.ensureVisible(dataKey.currentContext),
       ),
 

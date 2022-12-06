@@ -1,33 +1,35 @@
 import 'package:employee_data/Components/input_field_design.dart';
 import 'package:employee_data/Components/square_button.dart';
-import 'package:employee_data/SplashScreen/splash.dart';
 import 'package:employee_data/Start_Screens/CreateEmployeeScreen/model/employeeCreate.dart';
-import 'package:employee_data/Start_Screens/CreateEmployeeScreen/validateEntry.dart';
-import 'package:employee_data/Start_Screens/HomePageScreen/HomePage.dart';
-import 'package:employee_data/Start_Screens/ShowDataScreen/ShowEmpData.dart';
+
 import 'package:employee_data/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:employee_data/api_connection/api_connection.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:async';
-
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 class _BodyState extends State<Body>  {
-    TextEditingController controller1,controller2,controller3,controller4,controller5,controller6,controller7;
-
-   String FirstName="", MiddleName="", LastName="",Preferred_Name="", Gender="",email="",doj="";
-
+    TextEditingController controller1,controller2,controller3,controller4,controller6,controller7;
+    bool descriptionIncorrect=false;
+    String FirstName="", MiddleName="", LastName="",Preferred_Name="", Gender="",email="",doj="";
+    // Initial Selected Value
+    String dropdownvalue = 'M';
+    // List of items in our dropdown menu
+    var items = [
+      'M',
+      'F',
+      'NA',
+      ];
   @override
   void initState() {
+    Gender=dropdownvalue;
     super.initState();
     controller1 = TextEditingController();
     controller2 = TextEditingController();
     controller3 = TextEditingController();
     controller4 = TextEditingController();
-    controller5 = TextEditingController();
     controller6 = TextEditingController();
     controller7 = TextEditingController();
 
@@ -39,7 +41,6 @@ class _BodyState extends State<Body>  {
     controller2?.dispose();
     controller3?.dispose();
     controller4?.dispose();
-    controller5?.dispose();
     controller6?.dispose();
     controller7?.dispose();
 
@@ -47,24 +48,30 @@ class _BodyState extends State<Body>  {
   }
 sendData() async{
 
-    EmployeeData employeeDataModel= new EmployeeData(FirstName, MiddleName, LastName, Preferred_Name, Gender, email, doj);
+    EmployeeData employeeDataModel= EmployeeData(FirstName, MiddleName, LastName, Preferred_Name, Gender, email, doj);
     try{
       var res = await http.post(
         Uri.parse(API.create),
         body: employeeDataModel.toJson(),
       );
-      print("sending f "+ employeeDataModel.toJson().toString());
+      print("sending details: "+ employeeDataModel.toJson().toString());
       if(res.statusCode == 200){
         var resBody = jsonDecode(res.body);
         if(resBody['success']){
-          Fluttertoast.showToast(msg: "Succesfully created");
+          Fluttertoast.showToast(msg: "Successfully created");
           controller1.clear();
           controller2.clear();
           controller3.clear();
           controller4.clear();
-          controller5.clear();
           controller6.clear();
           controller7.clear();
+          FirstName="";
+          MiddleName="";
+          LastName="";
+          Preferred_Name="";
+          Gender="";
+          email="";
+          doj="";
 
 
         }else{
@@ -74,7 +81,8 @@ sendData() async{
       }
     }
     catch(e){
-      print("forheen error : "+ e.toString());
+      print("Json create Data error : "+ e.toString());
+      Fluttertoast.showToast(msg: "Error : Form could not be submitted");
     }
 }
   @override
@@ -82,7 +90,7 @@ sendData() async{
     Size size = MediaQuery.of(context).size;
 
     return SingleChildScrollView(
-      child:Container(
+      child:SizedBox(
           width: size.width,
 
         child: Column(
@@ -108,7 +116,7 @@ sendData() async{
                       style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black, fontSize: 14),
                     ),
                   ),
-                  Align(
+                  const Align(
                     alignment: Alignment.centerLeft,
 
                     child: Text(
@@ -117,7 +125,7 @@ sendData() async{
                     ),
                   ),
                   SizedBox(height: size.height * 0.01),
-                  Align(
+                  const Align(
                     alignment: Alignment.centerLeft,
                     child:    Text(
                       "Just enter the details of the employee",
@@ -137,12 +145,13 @@ sendData() async{
                   InputFieldDesign(
                     controller:controller1,
 
-                    onChanged : (String value) async {
-                      FirstName = '$value';
+                    onChanged : (String value) {
+                        FirstName = '$value';
+
+
                     },
                     hintText: "Enter Your First Name",
                     inputType: TextInputType.text,
-                    errorText: "Field cannot be empty",
                   ),
 
                   SizedBox(height: size.height * 0.03),
@@ -161,7 +170,7 @@ sendData() async{
                         MiddleName = '$value';
                       },
                       hintText: "Enter Your Middle Name",
-                      inputType: TextInputType.text
+                      inputType: TextInputType.text,
                   ),
 
                   SizedBox(height: size.height * 0.03),
@@ -196,11 +205,14 @@ sendData() async{
                       controller:controller4,
 
                       onChanged : (String value) async {
-                        Preferred_Name = controller6.text;
+                        Preferred_Name = '$value';
+
                       },
                       hintText: "Enter Your Preferred Name",
-                      inputType: TextInputType.text
-                  ),
+                      inputType: TextInputType.text,
+                    errorText:
+                    descriptionIncorrect ? 'Description cannot be empty'
+                    : null,                 ),
                   SizedBox(height: size.height * 0.03),
                   const Align(
                     alignment: Alignment.centerLeft,
@@ -210,15 +222,38 @@ sendData() async{
 
                     ),
                   ),
-                  InputFieldDesign(
-                      controller:controller5,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child:
 
-                      onChanged : (String value) async {
-                        Gender = '$value';
-                      },
-                      hintText: "Enter Your Gender",
-                      inputType: TextInputType.text
-                  ),  SizedBox(height: size.height * 0.03),
+                  DropdownButton<String>(
+
+                    // Initial Value
+                    value: dropdownvalue,
+
+                    // Down Arrow Icon
+                    icon: const Icon(Icons.keyboard_arrow_down),
+
+                    // Array list of items
+                    items: items.map((String items) {
+                      return DropdownMenuItem(
+                        value: items,
+                        child: Text(items),
+                      );
+                    }).toList(),
+
+                    // After selecting the desired option,it will
+                    // change button value to selected value
+                    onChanged: (String newValue) {
+                      setState(() {
+                        dropdownvalue = newValue;
+                        Gender = '$newValue';
+
+                      });
+                    },
+                  ),
+                  ),
+                  SizedBox(height: size.height * 0.03),
                   const Align(
                     alignment: Alignment.centerLeft,
                     child:    Text(
@@ -237,7 +272,7 @@ sendData() async{
                       inputType: TextInputType.text
                   ),
                   SizedBox(height: size.height * 0.03),
-                  Align(
+                  const Align(
                     alignment: Alignment.centerLeft,
                     child:    Text(
                       "Date of Joining",
@@ -250,7 +285,7 @@ sendData() async{
 controller: controller7,
 
                   cursorColor: Colors.white,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     icon: Icon(Icons.calendar_today),
                     hintText: "yyyy-mm-dd",
                     hintStyle: TextStyle(color: Colors.grey),
@@ -264,23 +299,21 @@ controller: controller7,
                         context: context,
                         initialDate: DateTime.now(), //get today's date
                         firstDate:DateTime(1900), //DateTime.now() - not to allow to choose before today.
-                        lastDate: DateTime(2101),
+                        lastDate: DateTime.now(),
 
                     );
 
                       if(pickedDate != null ){
-                        print(pickedDate);  //get the picked date in the format => 2022-07-04 00:00:00.000
+                        print(pickedDate);
                         String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
-                        print(formattedDate); //formatted date output using intl package =>  2022-07-04
-                        //You can format date as per your need
+                        print(formattedDate);
 
                         setState(() {
                           controller7.text = formattedDate;
                           doj = '$formattedDate';
-//set foratted date to TextField value.
                         });
                       }else{
-                        print("Date is not selected");
+                        Fluttertoast.showToast(msg : "Date is not selected");
                       }
 
                   },
@@ -301,11 +334,10 @@ controller: controller7,
 
                 text: "Create",
                 press: () {
+
                   if(validateEntry(FirstName,MiddleName,LastName,Preferred_Name,Gender,email,doj)) {
 
                     sendData();
-                  }else{
-
                   }
                 }),
 
@@ -315,7 +347,6 @@ controller: controller7,
       ),
     );
   }
-
     bool validateEntry(
         String FirstName,
         MiddleName,
@@ -324,17 +355,49 @@ controller: controller7,
         Gender,
         email,
         doj){
-      if(FirstName.isEmpty)         return false;
-      //   Fluttertoast.showToast(msg: "Details cannot be empty");
+      if(FirstName.isEmpty) {
+        Fluttertoast.showToast(msg: "Enter First Name");
 
-      if(Preferred_Name.isEmpty)    return false;
-      if(Gender.isEmpty)    return false;
-      if(email.isEmpty)    return false;
-      if(doj.isEmpty)    return false;
-      return true;
+        return false;
+      }
+      if(LastName.isEmpty) {
+        Fluttertoast.showToast(msg: "Enter Last Name");
+      return false;}
+        if(Preferred_Name.isEmpty) {
+          Fluttertoast.showToast(msg: "Enter Preferred Name");
+
+          return false;
+        }
+        if(Gender.isEmpty) {
+          Fluttertoast.showToast(msg: "Define Gender");
+
+          return false;
+        }
+        if(email.isEmpty) {
+          Fluttertoast.showToast(msg: "Enter email");
+
+          return false;
+        }else{
+          bool emailValid = RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$').hasMatch(email);
+          if(emailValid==false){
+            Fluttertoast.showToast(msg: "Enter valid email");
+
+            return false;
+
+          }
+
+        }
+          if(doj.isEmpty)  {
+            Fluttertoast.showToast(msg: "Enter Date of Joining");
+
+            return false;}
+        return true;
+      }
+
 
 }
-}
+
+
 /// This is the stateful widget that the main application instantiates.
 class Body extends StatefulWidget {
 

@@ -45,6 +45,8 @@ class _InputFieldDesign extends State<InputFieldDesign>{
   @override
   Widget build(BuildContext context) {
     return TextField(
+      autofocus: true,
+
       controller: controller,
       onChanged: onChanged,
       cursorColor: SecondaryColor,
