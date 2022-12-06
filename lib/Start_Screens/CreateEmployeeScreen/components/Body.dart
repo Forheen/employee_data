@@ -58,7 +58,7 @@ sendData() async{
       if(res.statusCode == 200){
         var resBody = jsonDecode(res.body);
         if(resBody['success']){
-          Fluttertoast.showToast(msg: "Successfully created");
+          Fluttertoast.showToast(msg: "Successfully created",gravity: ToastGravity.CENTER);
           controller1.clear();
           controller2.clear();
           controller3.clear();

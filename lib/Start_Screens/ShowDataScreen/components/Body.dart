@@ -248,7 +248,15 @@ key:               dataKey,
           ), //SizedBox
         ) :         const SizedBox(height: 20.00),
 
-        const SizedBox(height: 30.00),
+        const SizedBox(height: 20.00),
+        const Text(
+          "Long Press on any row to get detailed data",
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.black,
+          ), //Textstyle
+        ),
+        const SizedBox(height:20.00),
 
         DataTable(
           headingTextStyle: const TextStyle(
@@ -312,7 +320,7 @@ key:               dataKey,
 
                   DataCell(Text(usersFiltered[index].Preferred_Name)),
                   DataCell(Text(usersFiltered[index].doj)),
-                 DataCell(Text(daysBetween(usersFiltered[index].doj).toInt().toString() +" years ")),
+                 DataCell(Text(daysBetween(usersFiltered[index].doj).toInt().toString() +" yrs ")),
                 ],
               ),
           ),
