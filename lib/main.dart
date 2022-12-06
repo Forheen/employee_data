@@ -1,4 +1,3 @@
-import 'package:employee_data/Start_Screens/ShowDataScreen/ShowEmpData.dart';
 import 'package:flutter/material.dart';
 import 'package:employee_data/SplashScreen/splash.dart';
 
@@ -19,6 +18,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.indigo,
       ),
       home: Splash(),
+      debugShowCheckedModeBanner: false,
+
     );
   }
 }
